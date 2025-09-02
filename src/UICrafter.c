@@ -2,18 +2,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
-
-
-int main(void){
-    GLFWwindow *Wnd_main = Wnd_Init("Fit");
-
-
-    while(!glfwWindowShouldClose(Wnd_main)){
-    
-    }
-
-}
-
+#include "UICrafter.h"
 
 
 
@@ -39,7 +28,7 @@ void Callback_mainWnd_UserInput(GLFWwindow* window, int key, int scancode, int a
 }
 
 
-GLFWwindow *Wnd_Init(char *title){
+GLFWwindow* WndInit(char* title){
     if (!glfwInit()){
         printf("%s\n", "Failed to initialize GLFW");
         return NULL;
@@ -48,7 +37,7 @@ GLFWwindow *Wnd_Init(char *title){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-    GLFWwindow *Wnd_main = glfwCreateWindow(800, 600, title, NULL, NULL);
+    GLFWwindow* Wnd_main = glfwCreateWindow(800, 600, title, NULL, NULL);
     if (!Wnd_main){
         printf("%s\n", "Failed to create GLFW window");
         glfwTerminate();
@@ -64,4 +53,24 @@ GLFWwindow *Wnd_Init(char *title){
     glfwSetFramebufferSizeCallback(Wnd_main, Callback_frameBufferSize);
     glfwSetKeyCallback(Wnd_main, Callback_mainWnd_UserInput);
     return Wnd_main;
+}
+
+UIctx* UICtxInit(char* title){
+    UIctx* new = malloc(sizeof(UIctx));
+    new->wnd = WndInit(title);
+    new->bgColor = malloc(sizeof(float) * 4);
+    new->bgColor[0] = 1.0f;
+    new->bgColor[1] = 1.0f;
+    new->bgColor[2] = 1.0f;
+    new->bgColor[3] = 1.0f;
+    return new;
+}
+
+
+void DrawUI(UIctx* ctx){
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(ctx->bgColor[0], ctx->bgColor[1],ctx->bgColor[2],ctx->bgColor[3]);
+
+    glfwSwapBuffers(ctx->wnd);
+    glfwPollEvents();
 }
